@@ -1,0 +1,36 @@
+version: 2
+models:
+  - name: common_exchange
+    description: Exchange reference with quote currency. Produced by Athena as Iceberg; consumed by any engine.
+    columns:
+      - {name: exchange, tests: [not_null, unique]}
+      - {name: currency_code, tests: [not_null]}
+      - {name: country}
+  - name: common_fx_daily
+    description: Daily FX rates as units of currency per 1 USD.
+    columns:
+      - {name: trade_date, tests: [not_null]}
+      - {name: currency_code, tests: [not_null]}
+      - {name: units_per_usd, tests: [not_null]}
+  - name: common_ticker
+    description: Conformed ticker dimension (BHP.AX and BHP resolve to one key).
+    columns:
+      - {name: ticker, tests: [not_null]}
+      - {name: ticker_raw}
+      - {name: exchange, tests: [not_null]}
+      - {name: company_name}
+      - {name: sector}
+      - {name: asset_type}
+      - {name: region}
+      - {name: is_active}
+  - name: common_price_daily
+    description: Shared daily prices with native close, the FX rate used, and USD close. The producer table for all consumers.
+    columns:
+      - {name: ticker, tests: [not_null]}
+      - {name: exchange, tests: [not_null]}
+      - {name: trade_date, tests: [not_null]}
+      - {name: currency_code, tests: [not_null]}
+      - {name: close, description: "Close in the exchange's native currency.", tests: [not_null]}
+      - {name: units_per_usd, description: "FX rate applied (1.0 for USD)."}
+      - {name: close_usd, description: "close / units_per_usd."}
+      - {name: volume}

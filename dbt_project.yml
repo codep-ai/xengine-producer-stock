@@ -1,0 +1,23 @@
+# xengine-producer-stock — the PRODUCING team's own dbt project (Athena -> Apache Iceberg in Glue database `stock_common_mesh`).
+# Multi-project shape of the cross-engine demo: no folder switching, one engine, one profile. Consumers live in their own repos and
+# depend on these tables only through declared sources carrying the same `physical_identity` (glue:stock_common_mesh.<table>).
+name: xengine_producer_stock
+version: "1.0.0"
+config-version: 2
+profile: xengine_producer_stock
+model-paths: ["models"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+tests:
+  xengine_producer_stock:
+    +tags: ["cross_engine_mesh", "cross_engine", "role_producer", "engine_athena"]
+
+models:
+  xengine_producer_stock:
+    +tags: ["cross_engine_mesh", "cross_engine", "role_producer", "engine_athena", "stock_common_mesh"]
+    +materialized: table
+    +table_type: iceberg
+    +format: parquet
+    +meta: {engine: athena, role: producer}
