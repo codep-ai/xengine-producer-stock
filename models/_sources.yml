@@ -1,9 +1,9 @@
 version: 2
 sources:
   - name: stock_raw
-    description: Raw stock tables. Iceberg on S3, registered in Glue by lineage/xengine/glue_sync.py (pointers only, no copy).
+    description: Raw stock tables. Glue-managed Apache Iceberg in the customer's bucket (Glue database stock_iceberg); no engine owns them.
     database: awsdatacatalog
-    schema: stock_raw_xengine
+    schema: stock_iceberg
     meta: {engine: athena, physical_format: iceberg}
     tables:
       - name: prices
